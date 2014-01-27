@@ -12,12 +12,18 @@ cgsgEventTypes.ON_SELECTED_VALUE_CHANGED = "onSelectedValueChanged";
  * @module Node
  * @extends CGSGNodeDomElement
  * @constructor
- * @param xxx
+ * @param {Number} x Relative position on X
+ * @param {Number} y Relative position on Y
+ * @param {Number} width Relative dimension
+ * @param {Number} height Relative Dimension
+ * @param {Array of Collection} array of collections with key and value
+ * @param {String} name of the key parameter (text appearing in select box as option)
+ * @param {String} name of the value parameter (value of the option)
  * @type {CGSGNodeSelect}
  */
 var CGSGNodeSelect = CGSGNodeDomElement.extend(
     {
-        initialize : function (x, y, width, height, values) {
+        initialize : function (x, y, width, height, values, getKey, getValue) {
             this._super(x, y, width, height, document.createElement("select"));
 
             this.resizeTo(CGSGMath.fixedPoint(width), CGSGMath.fixedPoint(height));
@@ -45,6 +51,9 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
              */
             this._values = values;
 
+            this.getKey = getKey;
+            this.getValue = getValue;
+
             /**
              * Value selected
              * @property _selectedValue
@@ -60,7 +69,7 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
             this._initContainer();
 
             /**
-             * Event
+             * Handle event when changing selected value
              * @property ON_SELECTED_VALUE_CHANGED
              * @default null
              * @type {Function}
@@ -107,14 +116,15 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
             if(values.length > 0){
                 for(var i = 0; i < values.length; i++){
                     var option = document.createElement("option");
-                    option.value = values[i].key;
-                    option.text = values[i].value;
+
+                    option.value = values[i][this.getValue];
+                    option.text = values[i][this.getKey];
                     this._htmlElement.add(option);
                 }
                 if(this._selectedValue != null){
                     this._htmlElement.value = this._selectedValue;
                 } else {
-                    this._selectedValue != values[0].key;
+                    this._selectedValue != values[0][this.getValue];
                 }
             }
         },

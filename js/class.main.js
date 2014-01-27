@@ -25,29 +25,14 @@ var CGMain = CGSGView.extend(
             this.rootNode = new CGSGNode(0, 0);
             CGSG.sceneGraph.addNode(this.rootNode, null);
 
-            var hash = {
-                initialize : function (key, value) {
-                    this.key = 0;
-                    this.value = 0;
-                }
-            };
-
-            var val1 = new Object(), val2 = new Object(); val3 = new Object(), val4 = new Object();
-            val1.key = "-60";
-            val1.value = "moins de 60cm";
-
-            val2.key = "120";
-            val2.value = "120cm";
-
-            val3.key = "180";
-            val3.value = "180cm";
-
-            val4.key = "210";
-            val4.value = "210cm";
+            var val1 = {"key":"moins de 60cm", "value":"-60"},
+                val2 = {"key":"120cm", "value":"120"},
+                val3 = {"key":"180cm", "value":"180"},
+                val4 = {"key":"210cm", "value":"210"};
 
             var myValues = [val1, val2, val3];
 
-            this.selectTest = new CGSGNodeSelect(400, 200, 200, 20, myValues);
+            this.selectTest = new CGSGNodeSelect(400, 200, 200, 20, myValues, "key", "value");
             this.rootNode.addChild(this.selectTest, null);
 
             this.selectTest.setSelectedValue("120");
