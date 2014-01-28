@@ -26,16 +26,21 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
         initialize : function (x, y, width, height, values, getKey, getValue) {
             this._super(x, y, width, height, document.createElement("select"));
 
+            // parent of select is a div, to allow further customisation
+            this._htmlParentElement = document.createElement("div");
+
             this.resizeTo(CGSGMath.fixedPoint(width), CGSGMath.fixedPoint(height));
-            this.isDraggable = false;
+            this.isDraggable = true;
+
+            this.width = width;
+            this.height = height;
 
             /**
-             * Color of the area AROUND the select (around 4 pixel)
-             * @property color
-             * @default "White"
-             * @type {String}
+             * Select customization
              */
+            this.arrowURL = null;
             this.color = "White";
+            this.fontColor = "Black";
 
             /**
              * @property classType
@@ -75,6 +80,7 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
              * @type {Function}
              */
             this.onSelectedValueChanged = null;
+
         },
 
         /**
@@ -86,7 +92,9 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
             if (!cgsgExist(this._htmlElement)) {
                 this._createContainer();
             }
-            document.body.appendChild(this._htmlElement);
+            document.body.appendChild(this._htmlParentElement);
+            this._htmlParentElement.appendChild(this._htmlElement);
+            this.updateRender();
         },
 
         /**
@@ -100,12 +108,8 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
                 values = this._values;
             }
 
-//            this._htmlElement.style.position = "absolute";
-//            this._htmlElement.style.color = "white";
-//            this._htmlElement.style.background = "black";
-
             var onClickStartHandler = function (event) {
-                if ( cgsgExist(this.onSwitchValueChanged)) {
+                if ( cgsgExist(this.onSelectedValueChanged)) {
                     this._selectedValue =  this._htmlElement.value;
                     CGSG.eventManager.dispatch(this, cgsgEventTypes.ON_SELECTED_VALUE_CHANGED, new CGSGEvent(this, null));
                 };
@@ -126,6 +130,42 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
                 } else {
                     this._selectedValue != values[0][this.getValue];
                 }
+            }
+        },
+
+        updateRender : function (){
+
+            if (cgsgExist(this._htmlParentElement) && cgsgExist(this._htmlElement)) {
+
+                // Custom Div containing select
+                this._htmlParentElement.style.position = "absolute";
+                this._htmlParentElement.style.overflow = "hidden";
+                this._htmlParentElement.style.border = "1px solid #ccc"
+                this._htmlParentElement.style.left = (this.getAbsoluteLeft()) + "px";
+                this._htmlParentElement.style.top = (this.getAbsoluteTop()) + "px";
+                this._htmlParentElement.style.width = (this.getAbsoluteWidth()) + "px";
+                this._htmlParentElement.style.height = (this.getAbsoluteHeight()) + "px";
+
+                // Custom Select
+                this._htmlElement.style.position = "";
+                this._htmlElement.style.fontSize = (this.height - 30/100*this.height) +"px";
+                this._htmlElement.style.color = this.fontColor;
+                //Those properties should rather be modified in parent div for uniformity
+                this._htmlElement.style.border = "none";
+                this._htmlElement.style.backgroundColor = "transparent";
+
+                this._htmlElement.style.height = (this.getAbsoluteHeight()-4) + "px";
+
+                // Handle Custom Arrows
+                if(this.arrowURL !== null){
+                    this._htmlParentElement.style.background = "url("+this.arrowURL+") no-repeat right ";
+                    this._htmlElement.style.width = (this.getAbsoluteWidth() + 20 ) + "px";
+                } else {
+                    this._htmlElement.style.width = (this.getAbsoluteWidth()) + "px";
+                }
+                //Background color comes after background, to avoid property overlap
+                this._htmlParentElement.style.backgroundColor = this.color;
+
             }
         },
 
@@ -181,12 +221,8 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
             //we draw the rect at (0,0) because we have already translated the context to the correct position
             context.fillRect(0, 0, this.dimension.width, this.dimension.height);
 
-            if (cgsgExist(this._htmlElement)) {
-                this._htmlElement.style.left = (this.getAbsoluteLeft()) + "px";
-                this._htmlElement.style.top = (this.getAbsoluteTop()) + "px";
-                this._htmlElement.style.width = (this.getAbsoluteWidth()) + "px";
-                this._htmlElement.style.height = (this.getAbsoluteHeight()) + "px";
-            }
+
+
 
         },
 
