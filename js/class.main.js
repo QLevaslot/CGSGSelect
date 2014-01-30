@@ -32,10 +32,10 @@ var CGMain = CGSGView.extend(
                 val4 = {"key":"210cm", "value":"210"};
             var myValues = [val1, val2, val3];
 
-            this.selectTest = new CGSGNodeSelect(400, 200, 200, 20, myValues, "key", "value");
+            this.selectTest = new CGSGNodeSelect(400, 200, 200, 21, myValues, "key", "value");
 
             // Custom arrow for the select, need to updateRender() to apply modifications
-//            this.selectTest.arrowURL = "arrow_select.jpg";
+            this.selectTest.arrowURL = "arrow_select.jpg";
             this.selectTest.color = "White";
             this.selectTest.updateRender();
 

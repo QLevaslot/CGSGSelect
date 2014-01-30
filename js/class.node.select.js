@@ -140,21 +140,21 @@ var CGSGNodeSelect = CGSGNodeDomElement.extend(
                 // Custom Div containing select
                 this._htmlParentElement.style.position = "absolute";
                 this._htmlParentElement.style.overflow = "hidden";
-                this._htmlParentElement.style.border = "1px solid #ccc"
+                this._htmlParentElement.style.border = "none";
                 this._htmlParentElement.style.left = (this.getAbsoluteLeft()) + "px";
                 this._htmlParentElement.style.top = (this.getAbsoluteTop()) + "px";
                 this._htmlParentElement.style.width = (this.getAbsoluteWidth()) + "px";
-                this._htmlParentElement.style.height = (this.getAbsoluteHeight()) + "px";
+                this._htmlParentElement.style.paddingTop = "0px";
+                this._htmlParentElement.style.paddingBottom = "0px";
 
                 // Custom Select
                 this._htmlElement.style.position = "";
                 this._htmlElement.style.fontSize = (this.height - 30/100*this.height) +"px";
                 this._htmlElement.style.color = this.fontColor;
+                this._htmlElement.style.height = (this.getAbsoluteHeight()) + "px";
                 //Those properties should rather be modified in parent div for uniformity
-                this._htmlElement.style.border = "none";
+                this._htmlElement.style.border = "1px solid #ccc";
                 this._htmlElement.style.backgroundColor = "transparent";
-
-                this._htmlElement.style.height = (this.getAbsoluteHeight()-4) + "px";
 
                 // Handle Custom Arrows
                 if(this.arrowURL !== null){
